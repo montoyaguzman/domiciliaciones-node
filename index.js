@@ -7,6 +7,8 @@ const cardsApi = require("./routes/cards.js");
 const usersApi = require("./routes/users.js");
 const paymentsApi = require("./routes/payments.js");
 
+app.use(express.json());
+
 //Routes
 cardsApi(app);
 usersApi(app);

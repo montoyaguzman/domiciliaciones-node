@@ -1,14 +1,12 @@
 const cardMocks = [
   {
     id: "d2a4a062-d256-41bb-b1b2-9d915af6b75e",
-    userId: "d2a4a062-d256-41bb-b1b2-9d915af6b32a",
     cardNumber: "1234567891234567",
     expirationData: "01/99",
     cvv: "123"
   },
   {
     id: "d2a4a062-d256-41bb-b1b2-9d915af6b87d",
-    userId: "d2a4a062-d256-41bb-b1b2-9d915af6b21a",
     cardNumber: "1234567891234568",
     expirationData: "01/99",
     cvv: "123"

@@ -1,8 +1,14 @@
 const express = require("express");
 const boom = require("@hapi/boom");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
+const config = require("../config/index");
 const UsersService = require("../services/users");
 const validationHandler = require("../utils/middleware/validationHanddler");
 const { createUserSchema } = require("../utils/schemas/users");
+
+//Basic
+require("../utils/auth/strategies/basic");
 
 function authApi(app) {
   const router = express.Router();
@@ -16,15 +22,41 @@ function authApi(app) {
       next(boom.unauthorized("apiKeyToken is required"));
     }
 
-    try {
-      const serviceResponse = await usersService.getUser();
-      res.status(200).json({
-        data: serviceResponse,
-        message: "User listed"
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    passport.authenticate("basic", function(error, user) {
+      try {
+        if (error || !user) {
+          next(boom.unauthorized());
+        }
+
+        req.login(user, { session: false }, async function(error) {
+          if (error) {
+            next(error);
+          }
+
+          // const apiKey = await apiKeysService.getApiKey({ token: apiKeyToken });
+
+          // if (!apiKey) {
+          //   next(boom.unauthorized());
+          // }
+
+          const { _id: id, name, email } = user;
+          const payload = {
+            sub: id,
+            name,
+            email
+            // scopes: apiKey.scopes
+          };
+
+          const token = jwt.sign(payload, config.authJwtSecret, {
+            expiresIn: "15m"
+          });
+
+          res.status(200).json({ token, user: { id, name, email } });
+        });
+      } catch (error) {
+        next(error);
+      }
+    })(req, res, next);
   });
 
   router.post(

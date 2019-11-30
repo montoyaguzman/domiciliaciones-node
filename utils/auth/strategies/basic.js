@@ -1,23 +1,24 @@
-// const passport = require("passport");
-// const { BasicStrategy } = require("passport-http");
-// const UserService = require("../../../services/users");
+const passport = require("passport");
+const bcrypt = require("bcrypt");
+const { BasicStrategy } = require("passport-http");
+const UserService = require("../../../services/users");
 
-// passport.use(
-//   new BasicStrategy(async function(email, password, cb) {
-//     const userService = new UserService();
+passport.use(
+  new BasicStrategy(async function(email, password, cb) {
+    const userService = new UserService();
+    try {
+      const user = await userService.getUser(email);
 
-//     try {
-//       const user = await userService.getUser({ email });
-//       if (!user) {
-//         return cb(boom.unauthorized(), false);
-//       }
-//       if (!(await bcrypt.compare(password, user.password))) {
-//         return cb(boom.unauthorized(), false);
-//       }
-//       delete user.password;
-//       return cb(null, user);
-//     } catch (error) {
-//       return cb(error);
-//     }
-//   })
-// );
+      if (!user) {
+        return cb(boom.unauthorized(), false);
+      }
+      if (!(await bcrypt.compare(password, user.password))) {
+        return cb(boom.unauthorized(), false);
+      }
+      delete user.password;
+      return cb(null, user);
+    } catch (error) {
+      return cb(error);
+    }
+  })
+);

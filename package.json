@@ -19,9 +19,15 @@
   },
   "homepage": "https://github.com/MarioSalinas1605/backPagos#readme",
   "dependencies": {
+    "@hapi/boom": "^8.0.1",
+    "@hapi/joi": "^16.1.8",
+    "bcrypt": "^3.0.7",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongodb": "^3.3.3"
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.3.3",
+    "passport": "^0.4.0",
+    "passport-http": "^0.3.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.4"

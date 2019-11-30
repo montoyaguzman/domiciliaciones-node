@@ -6,10 +6,12 @@ const config = require("./config");
 const cardsApi = require("./routes/cards.js");
 const usersApi = require("./routes/users.js");
 const paymentsApi = require("./routes/payments.js");
+const authApi = require("./routes/auth");
 
 app.use(express.json());
 
 //Routes
+authApi(app);
 cardsApi(app);
 usersApi(app);
 paymentsApi(app);

@@ -8,31 +8,6 @@ function usersApi(app) {
 
   const usersService = new UsersService();
 
-  router.get("/sign-in", async (req, res) => {
-    try {
-      const serviceResponse = await usersService.getUser();
-      res.status(200).json({
-        data: serviceResponse,
-        message: "User listed"
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
-  router.post("/sign-up", async (req, res) => {
-    const { body: user } = req;
-    try {
-      const serviceResponse = await usersService.createUser(user);
-      res.status(200).json({
-        data: serviceResponse,
-        message: "User created"
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
   router.put("/", async (req, res) => {
     try {
       const serviceResponse = await usersServiceMock.prototype.updateUser();

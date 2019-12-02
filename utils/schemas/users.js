@@ -14,7 +14,10 @@ const createUserSchema = joi.object({
     .min(1)
     .max(100),
 
-  cellphone: joi.number().max(20),
+  cellphone: joi
+    .string()
+    .min(10)
+    .max(10),
 
   accountNumber: joi.number().max(50),
 

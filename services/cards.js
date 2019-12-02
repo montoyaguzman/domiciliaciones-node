@@ -6,8 +6,8 @@ class CardsService {
     this.mongoDB = new MongoLib();
   }
 
-  async getCards() {
-    const movies = await this.mongoDB.getAll(this.collection, {});
+  async getCards(query) {
+    const movies = await this.mongoDB.getAll(this.collection, query);
     return movies || [];
   }
 

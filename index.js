@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
 
 //Modules of project
@@ -9,6 +10,7 @@ const paymentsApi = require("./routes/payments.js");
 const authApi = require("./routes/auth");
 
 app.use(express.json());
+app.use(cors());
 
 //Routes
 authApi(app);

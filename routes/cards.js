@@ -1,7 +1,9 @@
 const express = require("express");
 const passport = require("passport");
+const boom = require("@hapi/boom");
 const CardsService = require("../services/cards");
-const { cardsServiceMock } = require("../utils/mocks/cards");
+const validationHandler = require("../utils/middleware/validationHanddler");
+const { createCardSchema } = require("../utils/schemas/cards");
 
 require("../utils/auth/strategies/jwt");
 
@@ -15,8 +17,12 @@ function cardsApi(app) {
     "/",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
+      const { _id: userId } = req.user;
+
       try {
-        const serviceResponse = await cardsService.getCards();
+        const serviceResponse = await cardsService.getCards({
+          userId: userId
+        });
         res.status(200).json({
           data: serviceResponse,
           message: "Card listed"
@@ -30,14 +36,19 @@ function cardsApi(app) {
   router.get(
     "/:cardId",
     passport.authenticate("jwt", { session: false }),
-    async (req, res) => {
+    async (req, res, next) => {
       const { cardId } = req.params;
       try {
         const serviceResponse = await cardsService.getCard(cardId);
-        res.status(200).json({
-          data: serviceResponse,
-          message: "Card listed"
-        });
+
+        if (req.user._id.toString() != serviceResponse.userId.toString()) {
+          next(boom.unauthorized());
+        } else {
+          res.status(200).json({
+            data: serviceResponse,
+            message: "Card listed"
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -47,8 +58,11 @@ function cardsApi(app) {
   router.post(
     "/",
     passport.authenticate("jwt", { session: false }),
+    validationHandler(createCardSchema),
     async (req, res) => {
       const { body: card } = req;
+
+      card.userId = req.user._id;
 
       try {
         const serviceResponse = await cardsService.createCard(card);
@@ -65,6 +79,7 @@ function cardsApi(app) {
   router.put(
     "/:cardId",
     passport.authenticate("jwt", { session: false }),
+    validationHandler(createCardSchema),
     async (req, res) => {
       const { cardId } = req.params;
       const { body: updatedCard } = req;

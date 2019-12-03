@@ -7,10 +7,7 @@ const paymentsCardSchema = joi.object({
     .string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
-  idAgreement: joi
-    .string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
+  idAgreement: joi.string().required(),
   alias: joi.string(),
   description: joi.string(),
   reference: joi.string(),

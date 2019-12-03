@@ -6,8 +6,8 @@ class PaymentsService {
     this.mongoDB = new MongoLib();
   }
 
-  async getPayments() {
-    const payments = await this.mongoDB.getAll(this.collection, {});
+  async getPayments(query = {}) {
+    const payments = await this.mongoDB.getAll(this.collection, query);
     return payments || [];
   }
 

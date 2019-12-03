@@ -1,5 +1,6 @@
 const express = require("express");
 const passport = require("passport");
+const boom = require("@hapi/boom");
 
 const validationHandler = require("../utils/middleware/validationHanddler");
 const { paymentsCardSchema } = require("../utils/schemas/payments");
@@ -17,8 +18,12 @@ function paymentsApi(app) {
     "/",
     passport.authenticate("jwt", { session: false }),
     async (req, res) => {
+      const { _id: userId } = req.user;
+
       try {
-        const serviceResponse = await paymentsService.getPayments();
+        const serviceResponse = await paymentsService.getPayments({
+          userId: userId
+        });
         res.status(201).json({
           data: serviceResponse,
           message: "Payment listed"
@@ -31,14 +36,19 @@ function paymentsApi(app) {
   router.get(
     "/:paymentId",
     passport.authenticate("jwt", { session: false }),
-    async (req, res) => {
+    async (req, res, next) => {
       const { paymentId } = req.params;
       try {
         const serviceResponse = await paymentsService.getPayment(paymentId);
-        res.status(201).json({
-          data: serviceResponse,
-          message: "Payment listed"
-        });
+
+        if (req.user._id.toString() != serviceResponse.userId.toString()) {
+          next(boom.unauthorized());
+        } else {
+          res.status(201).json({
+            data: serviceResponse,
+            message: "Payment listed"
+          });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -51,6 +61,8 @@ function paymentsApi(app) {
     validationHandler(paymentsCardSchema),
     async (req, res) => {
       const { body: payment } = req;
+      const { _id: userId } = req.user;
+      payment.userId = userId;
       try {
         const serviceResponse = await paymentsService.createPayment(payment);
         res.status(201).json({

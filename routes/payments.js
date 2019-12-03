@@ -24,7 +24,7 @@ function paymentsApi(app) {
         const serviceResponse = await paymentsService.getPayments({
           userId: userId
         });
-        res.status(201).json({
+        res.status(200).json({
           data: serviceResponse,
           message: "Payment listed"
         });

@@ -15,7 +15,7 @@ const paymentsCardSchema = joi.object({
   description: joi.string(),
   reference: joi.string(),
   paymentDate: joi.string().required(),
-  status: joi.string().required()
+  status: joi.string()
 });
 
 module.exports = {

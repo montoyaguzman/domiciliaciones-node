@@ -8,9 +8,11 @@ const cardsApi = require("./routes/cards.js");
 const usersApi = require("./routes/users.js");
 const paymentsApi = require("./routes/payments.js");
 const authApi = require("./routes/auth");
+const startBatch = require("./utils/batchs/payments");
 
 app.use(express.json());
 app.use(cors());
+startBatch();
 
 //Routes
 authApi(app);

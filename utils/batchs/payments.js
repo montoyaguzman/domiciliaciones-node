@@ -25,7 +25,7 @@ async function verifyPayments() {
 function pay(payments, day) {
   console.log(payments);
   payments.forEach(async payment => {
-    if (payment.paymentDate == day && payment.status == "active") {
+    if (payment.paymentDate == day && payment.status == "activo") {
       payment.status = "Paid of";
       const serviceResponse = await paymentsService.updatePayment(
         payment._id,

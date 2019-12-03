@@ -4,7 +4,6 @@ const passport = require("passport");
 const validationHandler = require("../utils/middleware/validationHanddler");
 const { paymentsCardSchema } = require("../utils/schemas/payments");
 const PaymentsService = require("../services/payments");
-const { paymentsServiceMock } = require("../utils/mocks/payments");
 
 require("../utils/auth/strategies/jwt");
 
@@ -49,6 +48,7 @@ function paymentsApi(app) {
   router.post(
     "/",
     passport.authenticate("jwt", { session: false }),
+    validationHandler(paymentsCardSchema),
     async (req, res) => {
       const { body: payment } = req;
       try {
@@ -66,6 +66,7 @@ function paymentsApi(app) {
   router.put(
     "/:paymentId",
     passport.authenticate("jwt", { session: false }),
+    validationHandler(paymentsCardSchema),
     async (req, res) => {
       const { paymentId } = req.params;
       const { body: updatedPayment } = req;
